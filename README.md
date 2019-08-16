@@ -8,6 +8,10 @@
 
 > A tiny 350b centralized state container with component bindings for [Preact] & [React].
 
+**This fork of [unistore](https://github.com/developit/unistore) adds an intersection type for injected props in both the preact and react typings.**
+
+**It is published under @metonym/unistore.**
+
 - **Small** footprint complements Preact nicely _(unistore + unistore/preact is ~650b)_
 - **Familiar** names and ideas from Redux-like libraries
 - **Useful** data selectors to extract properties from state
@@ -35,19 +39,19 @@ Then with a module bundler like [webpack](https://webpack.js.org) or [rollup](ht
 
 ```js
 // The store:
-import createStore from 'unistore'
+import createStore from 'unistore';
 
 // Preact integration
-import { Provider, connect } from 'unistore/preact'
+import { Provider, connect } from 'unistore/preact';
 
 // React integration
-import { Provider, connect } from 'unistore/react'
+import { Provider, connect } from 'unistore/react';
 ```
 
 Alternatively, you can import the "full" build for each, which includes both `createStore` and the integration for your library of choice:
 
 ```js
-import { createStore, Provider, connect } from 'unistore/full/preact'
+import { createStore, Provider, connect } from 'unistore/full/preact';
 ```
 
 The [UMD](https://github.com/umdjs/umd) build is also available on [unpkg](https://unpkg.com):
@@ -66,56 +70,57 @@ You can find the library on `window.unistore`.
 ### Usage
 
 ```js
-import createStore from 'unistore'
-import { Provider, connect } from 'unistore/preact'
+import createStore from 'unistore';
+import { Provider, connect } from 'unistore/preact';
 
-let store = createStore({ count: 0 })
+let store = createStore({ count: 0 });
 
 // If actions is a function, it gets passed the store:
 let actions = store => ({
   // Actions can just return a state update:
   increment(state) {
-    return { count: state.count+1 }
+    return { count: state.count + 1 };
   },
 
   // The above example as an Arrow Function:
-  increment2: ({ count }) => ({ count: count+1 }),
+  increment2: ({ count }) => ({ count: count + 1 }),
 
   //Actions receive current state as first parameter and any other params next
   //check this function as <button onClick={incrementAndLog}>
   incrementAndLog: ({ count }, event) => {
-    console.info(event)
-    return { count: count+1 }
+    console.info(event);
+    return { count: count + 1 };
   },
 
   // Async actions can be pure async/promise functions:
   async getStuff(state) {
-    let res = await fetch('/foo.json')
-    return { stuff: await res.json() }
+    let res = await fetch('/foo.json');
+    return { stuff: await res.json() };
   },
 
   // ... or just actions that call store.setState() later:
   incrementAsync(state) {
-    setTimeout( () => {
-      store.setState({ count: state.count+1 })
-    }, 100)
+    setTimeout(() => {
+      store.setState({ count: state.count + 1 });
+    }, 100);
   }
-})
+});
 
-const App = connect('count', actions)(
-  ({ count, increment }) => (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={increment}>Increment</button>
-    </div>
-  )
-)
+const App = connect(
+  'count',
+  actions
+)(({ count, increment }) => (
+  <div>
+    <p>Count: {count}</p>
+    <button onClick={increment}>Increment</button>
+  </div>
+));
 
 export default () => (
   <Provider store={store}>
     <App />
   </Provider>
-)
+);
 ```
 
 ### Debug
@@ -123,11 +128,14 @@ export default () => (
 Make sure to have [Redux devtools extension](https://github.com/zalmoxisus/redux-devtools-extension) previously installed.
 
 ```js
-import createStore from 'unistore'
-import devtools    from 'unistore/devtools'
+import createStore from 'unistore';
+import devtools from 'unistore/devtools';
 
 let initialState = { count: 0 };
-let store = process.env.NODE_ENV === 'production' ?  createStore(initialState) : devtools(createStore(initialState));
+let store =
+  process.env.NODE_ENV === 'production'
+    ? createStore(initialState)
+    : devtools(createStore(initialState));
 
 // ...
 ```
